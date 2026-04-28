@@ -48,4 +48,11 @@ class Territorium {
 
     return sum.div(amount);
   }
+  
+  void markerTerritoriumMedCirkel(int radius, color farve){
+    PVector m = midt();
+    noStroke();
+    fill(farve);
+    circle(m.x, m.y, radius);
+  }
 }

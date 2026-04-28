@@ -18,10 +18,6 @@ void draw(){
   numberReleased = -1;
 }
 
-void mousePressed(){
-  risk.kastTerninger();
-}
-
 void mouseReleased(){
   mouseReleased = true;
 }

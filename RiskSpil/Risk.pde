@@ -82,7 +82,8 @@ class Risk {
     aktivSpiller = nyAktivSpiller;
     
     spilTilstand = SpilTilstand.TILFØJ;
-    antalArméerTilModtagelse = floor(antalTerritorierEjetAfSpiller(aktivSpiller) / 3);
+    antalArméerTilModtagelse = max(floor(antalTerritorierEjetAfSpiller(aktivSpiller) / 3), 3); // Antal territorier man ejer divideret med 3, men altid minimum 3 nye arméer
+    //DER SKAL TILFØJES KONTINENT-BONUS HER
   }
   
   int antalTerritorierEjetAfSpiller(Spiller spiller){
@@ -195,26 +196,50 @@ class Risk {
 
         Territorium t = territoriumTrykketPå();
         if (t != null) {
-          angribendeTerritorium = t;
-          return;
+          if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
+            angribendeTerritorium = t;
+            return;
+          }
         }
       } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
         statusText = "Vælg territorium som skal angribes";
+        angribendeTerritorium.markerTerritoriumMedCirkel(20, #F5CF97); // Marker det tidligere valgt angribende territorium
 
         Territorium t = territoriumTrykketPå();
         if (t != null) {
-          forsvarendeTerritorium = t;
-          return;
+          if (t.ejer != aktivSpiller) {
+            forsvarendeTerritorium = t;
+            return;
+          }
         }
       } else { // Territorierne er valgt
+        angribendeTerritorium.markerTerritoriumMedCirkel(20, #F5CF97); // Marker det tidligere valgt angribende territorium
+        forsvarendeTerritorium.markerTerritoriumMedCirkel(20, #F5CF97); // Marker det tidligere valgt forsvarende territorium
+      
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
+          
+          if ((numberReleased >= 1 && numberReleased <= 3) && (angribendeTerritorium.boendeArméer - numberReleased >= 1)) {
+            antalAngribendeArméer = numberReleased;
+            return;
+          }
         }
         if (antalForsvarendeArméer == -1) { // Den forsvarende spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal forsvarende arméer";
+          
+          if (numberReleased >= 1 && numberReleased <= 2) {
+            antalForsvarendeArméer = numberReleased;
+            return;
+          }
         }
         if (antalAngribendeArméer != -1 && antalForsvarendeArméer != -1) { // Alt er valgt, terningerne skal kastes
           statusText = "Kast terningerne!";
+          
+          if (mouseReleased) {
+            kastTerninger();
+            
+            sammenlignTerningerOgLavKrig();
+          }
         }
       }
     }
@@ -226,5 +251,9 @@ class Risk {
 
   void kastTerninger() {
     rb.ryst();
+  }
+  
+  void sammenlignTerningerOgLavKrig() {
+    
   }
 }
