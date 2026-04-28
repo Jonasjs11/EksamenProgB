@@ -1,4 +1,7 @@
 class Risk {
+
+  Raflebaeger rb;
+
   // VARIABLER TIL DATA
   Spiller[] spillere;
   Territorium[] territorier;
@@ -22,7 +25,10 @@ class Risk {
   PShape[] kystlinjer;
   PShape[] baggrunde;
 
+
   Risk(int antalSpillere) {
+
+
     // SETUP AF SPILLERE
     if (antalSpillere < 2 || antalSpillere > 5) {
       println("Mærkeligt antal spillere: " + antalSpillere);
@@ -35,7 +41,7 @@ class Risk {
     // SETUP AF ANDET
     statusText = "";
     spilTilstand = SpilTilstand.TILFØJ;
-    
+
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
     //kort.disableStyle();
@@ -60,7 +66,20 @@ class Risk {
     for (int i = 0; i < territorier.length; i++) {
       territorier[i] = new Territorium(kort.getChild(i+55), kort.getChild(i+55).getName());
     }
+
+
+
+
+    rb = new Raflebaeger();
+    println("Raflebæger : " + rb );
+
+    rb.addDice(new Terning(width/2, height/7 * 5, 6, color(255, 0, 0)));
+    rb.addDice(new Terning(width/2 - 55, height/7 * 5 - 40, 6, color(255, 0, 0)));
+    rb.addDice(new Terning(width/2 +55, height/7 * 5 - 40, 6, color(0, 0, 255)));
+    rb.addDice(new Terning(width/2 +55, height/7 * 5 + 40, 6, color(0, 0, 255)));
+    rb.addDice(new Terning(width/2 -55, height/7 * 5 + 40, 6, color(255, 0, 0)));
   }
+
 
   void fordelTerritorierTilfældigt() {
     //liste med alle territorier
@@ -86,14 +105,16 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-    
+    println("Rafflebæger2:" + rb);
+    rb.show();
+
+
     int statusWidth = 200;
     int statusHeight = 50;
     fill(255);
     stroke(0);
     strokeWeight(2);
     rect(width/2 - statusWidth/2, height-statusHeight, statusWidth, statusHeight);
-    
     fill(0);
     strokeWeight(1);
     textSize(24);
@@ -155,5 +176,9 @@ class Risk {
     if (spilTilstand == SpilTilstand.FLYT) { //Den aktive spiller har mulighed for at flytte arméer
       statusText = "Vælg territorium som skal flyttes arméer";
     }
+  }
+
+  void kastTerninger() {
+    rb.ryst();
   }
 }

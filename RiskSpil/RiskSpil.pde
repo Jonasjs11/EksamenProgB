@@ -1,8 +1,10 @@
 Risk risk;
 boolean mouseReleased = false;
 
+
 void setup(){
   size(1000, 1000);
+ 
   
   risk = new Risk(4);
   risk.fordelTerritorierTilfældigt();
@@ -11,8 +13,11 @@ void setup(){
 void draw(){
   risk.tick();
   risk.vis();
-  
-  mouseReleased = false;
+
+}
+
+void mousePressed(){
+  risk.kastTerninger();
 }
 
 void mouseReleased(){
