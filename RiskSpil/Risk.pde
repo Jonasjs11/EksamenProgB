@@ -24,6 +24,10 @@ class Risk {
   Territorium forsvarendeTerritorium;
   int antalAngribendeArméer;
   int antalForsvarendeArméer;
+  
+  // VARIABLER TIL FLYTTELSE
+  Territorium territoriumTilFraflytning;
+  Territorium territoriumTilTilflytning;
 
 
   PShape[] kystlinjer;
@@ -219,7 +223,7 @@ class Risk {
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
           
-          if ((numberReleased >= 1 && numberReleased <= 3) && (angribendeTerritorium.boendeArméer - numberReleased >= 1)) {
+          if ((numberReleased >= 1 && numberReleased <= 3) && (angribendeTerritorium.boendeArméer - numberReleased >= 1)) { // Man kan angribe med 1, 2 eller 3 arméer, og der skal være mindst én tilbage
             antalAngribendeArméer = numberReleased;
             return;
           }
@@ -239,18 +243,56 @@ class Risk {
             kastTerninger();
             
             sammenlignTerningerOgLavKrig();
+            
+            antalAngribendeArméer = 0;
+            antalForsvarendeArméer = 0;
+            angribendeTerritorium = null;
+            forsvarendeTerritorium = null;
+            spilTilstand = SpilTilstand.FLYT;
+            return;
           }
         }
       }
     }
 
-    if (spilTilstand == SpilTilstand.FLYT) { //Den aktive spiller har mulighed for at flytte arméer
-      statusText = "Vælg territorium som skal flyttes arméer";
+    if (spilTilstand == SpilTilstand.FLYT) { // Den aktive spiller har mulighed for at flytte arméer
+      if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
+        statusText = "Vælg territorium som skal flyttes arméer fra";
+        
+        Territorium t = territoriumTrykketPå();
+        if (t != null) {
+          if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
+            territoriumTilFraflytning = t;
+            return;
+          }
+        }
+      } else if (territoriumTilTilflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer til
+        statusText = "Vælg territorium som skal flyttes arméer til";
+        
+        Territorium t = territoriumTrykketPå();
+        if (t != null) {
+          if (t.ejer == aktivSpiller && territorierErForbundede(territoriumTilFraflytning, t)) {
+            territoriumTilTilflytning = t;
+            return;
+          }
+        }
+      } else { // Den aktive spiller har valgt begge territorier, og skal nu vælge antallet der skal flyttes
+        statusText = "Vælg antal arméer der skal flyttes";
+        
+        if (numberReleased >= 1 && territoriumTilFraflytning.boendeArméer - numberReleased >= 1) { // Der skal være mindst én armé tilbage
+          territoriumTilFraflytning.fjernArméer(numberReleased);
+          territoriumTilTilflytning.tilføjArméer(numberReleased);
+        }
+      }
     }
   }
 
   void kastTerninger() {
     rb.ryst();
+  }
+  
+  boolean territorierErForbundede(Territorium start, Territorium slut){
+    return true;
   }
   
   void sammenlignTerningerOgLavKrig() {
