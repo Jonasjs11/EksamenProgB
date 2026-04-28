@@ -71,6 +71,9 @@ class Risk {
     rb.addDice(new Terning(width/2 -55, height/7 * 5 + 40, 6, color(255, 0, 0)));
   }
   
+  /*
+  StartGameLoop() må kaldes når alle territorierne har en ejer.
+  */
   void startGameLoop(){
     skiftTurTil(spillere[0]);
   }
@@ -158,10 +161,15 @@ class Risk {
     return null;
   }
 
+
+  /*
+  Tick() skal kaldes hver frame i draw().
+  Metoden lytter efter spillerinput og reagerer på det i de tre faser, som findes ved hver tur.
+  */
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
       if (territoriumTilModtagelse == null) {
-        statusText = "Vælg territorium som skal tilføjes arméer";
+        statusText = "Vælg territorium som skal modtage arméer";
         
         Territorium t = territoriumTrykketPå();
         if (t != null) {
@@ -170,7 +178,7 @@ class Risk {
             return;
           }
         }
-      } else {
+      } else { // Den aktive spiller har valgt et territorium, nu skal arméerne tilføjes
         territoriumTilModtagelse.tilføjArméer(antalArméerTilModtagelse);
         
         antalArméerTilModtagelse = 0;
@@ -198,7 +206,7 @@ class Risk {
           forsvarendeTerritorium = t;
           return;
         }
-      } else {// Territorierne er valgt
+      } else { // Territorierne er valgt
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
         }
