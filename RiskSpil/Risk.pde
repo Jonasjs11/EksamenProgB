@@ -149,15 +149,20 @@ class Risk {
     text(statusText, width/2, height-statusHeight/2);
   }
 
-  Territorium territoriumTrykketPå() {
-    if (mouseReleased == false) {
-      return null;
+  final int radiusAfTrykOmråde = 30;
+  Territorium territoriumTrykketPå(boolean debugTrykOmråde) {
+    if (debugTrykOmråde) {
+      for (int i = 0; i < territorier.length; i++) {
+        territorier[i].markerTerritoriumMedCirkel(radiusAfTrykOmråde, #F5CF97);
+      }
     }
+    
+    if (mouseReleased == false) { return null; }
 
     Territorium t = null;
-
+    
     for (int i = 0; i < territorier.length; i++) {
-      if (PVector.dist(new PVector(mouseX, mouseY), territorier[i].midt()) < 50) {
+      if (PVector.dist(new PVector(mouseX, mouseY), territorier[i].midt()) < radiusAfTrykOmråde) {
         t = territorier[i];
         return t;
       }
@@ -176,7 +181,7 @@ class Risk {
       if (territoriumTilModtagelse == null) {
         statusText = "Vælg territorium som skal modtage arméer";
         
-        Territorium t = territoriumTrykketPå();
+        Territorium t = territoriumTrykketPå(true);
         if (t != null) {
           if (t.ejer == aktivSpiller) {
             territoriumTilModtagelse = t;
@@ -198,7 +203,7 @@ class Risk {
       if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg territorium som skal angribe";
 
-        Territorium t = territoriumTrykketPå();
+        Territorium t = territoriumTrykketPå(true);
         if (t != null) {
           if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
             angribendeTerritorium = t;
@@ -209,7 +214,7 @@ class Risk {
         statusText = "Vælg territorium som skal angribes";
         angribendeTerritorium.markerTerritoriumMedCirkel(20, #F5CF97); // Marker det tidligere valgt angribende territorium
 
-        Territorium t = territoriumTrykketPå();
+        Territorium t = territoriumTrykketPå(true);
         if (t != null) {
           if (t.ejer != aktivSpiller) {
             forsvarendeTerritorium = t;
@@ -259,7 +264,7 @@ class Risk {
       if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
         statusText = "Vælg territorium som skal flyttes arméer fra";
         
-        Territorium t = territoriumTrykketPå();
+        Territorium t = territoriumTrykketPå(true);
         if (t != null) {
           if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
             territoriumTilFraflytning = t;
@@ -269,7 +274,7 @@ class Risk {
       } else if (territoriumTilTilflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer til
         statusText = "Vælg territorium som skal flyttes arméer til";
         
-        Territorium t = territoriumTrykketPå();
+        Territorium t = territoriumTrykketPå(true);
         if (t != null) {
           if (t.ejer == aktivSpiller && territorierErForbundede(territoriumTilFraflytning, t)) {
             territoriumTilTilflytning = t;

@@ -11,8 +11,8 @@ void setup(){
 }
 
 void draw(){
-  risk.tick();
   risk.vis();
+  risk.tick();
   
   mouseReleased = false;
   numberReleased = -1;
