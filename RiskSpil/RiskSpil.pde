@@ -1,5 +1,6 @@
 Risk risk;
 boolean mouseReleased = false;
+int numberReleased = -1;
 
 void setup(){
   size(1000, 1000);
@@ -12,7 +13,9 @@ void setup(){
 void draw(){
   risk.tick();
   risk.vis();
-
+  
+  mouseReleased = false;
+  numberReleased = -1;
 }
 
 void mousePressed(){
@@ -21,4 +24,13 @@ void mousePressed(){
 
 void mouseReleased(){
   mouseReleased = true;
+}
+
+void keyReleased(){
+  try {
+     numberReleased = Integer.parseInt(str(key));
+  }
+  catch (NumberFormatException e) {
+     numberReleased = -1;
+  }
 }
