@@ -34,7 +34,13 @@ class Risk {
   }
   
   void fordelTerritorierTilfældigt() {
-    
+    //liste med alle territorier
+    //nuværende spiller variabel
+    //loop igennem antallet af territorier
+    //Vælg et tilfældigt territorie fra list
+    //giv territoriet til spilleren
+    //fjern territoriet fra listen
+    //gå videre til den næste spillere, og kær næste iteration af loopet
   }
   
   void vis() {
