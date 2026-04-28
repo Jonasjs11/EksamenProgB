@@ -1,4 +1,5 @@
 Risk risk;
+boolean mouseReleased = false;
 
 void setup(){
   size(1000, 1000);
@@ -10,4 +11,10 @@ void setup(){
 void draw(){
   risk.tick();
   risk.vis();
+  
+  mouseReleased = false;
+}
+
+void mouseReleased(){
+  mouseReleased = true;
 }
