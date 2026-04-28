@@ -15,6 +15,10 @@ class Risk {
   Spiller aktivSpiller;
   SpilTilstand spilTilstand;
 
+  // VARIABLER TIL MODTAGELSE
+  int antalArméerTilModtagelse;
+  Territorium territoriumTilModtagelse;
+
   // VARIABLER TIL KRIG
   Territorium angribendeTerritorium;
   Territorium forsvarendeTerritorium;
@@ -37,8 +41,7 @@ class Risk {
     }
 
     // SETUP AF ANDET
-    statusText = "";
-    spilTilstand = SpilTilstand.TILFØJ;
+    statusText = "Klar til start.";
 
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
@@ -67,7 +70,27 @@ class Risk {
     rb.addDice(new Terning(width/2 +55, height/7 * 5 + 40, 6, color(0, 0, 255)));
     rb.addDice(new Terning(width/2 -55, height/7 * 5 + 40, 6, color(255, 0, 0)));
   }
+  
+  void startGameLoop(){
+    skiftTurTil(spillere[0]);
+  }
 
+  void skiftTurTil(Spiller nyAktivSpiller){
+    aktivSpiller = nyAktivSpiller;
+    
+    spilTilstand = SpilTilstand.TILFØJ;
+    antalArméerTilModtagelse = floor(antalTerritorierEjetAfSpiller(aktivSpiller) / 3);
+  }
+  
+  int antalTerritorierEjetAfSpiller(Spiller spiller){
+    int antal = 0;
+    for (int i = 0; i < territorier.length; i++) {
+      if (territorier[i].ejer == spiller) {
+        antal += 1;
+      }
+    }
+    return antal;
+  }
 
   void fordelTerritorierTilfældigt() {
     //liste med alle territorier
@@ -137,7 +160,24 @@ class Risk {
 
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
-      statusText = "Vælg territorium som skal tilføjes arméer";
+      if (territoriumTilModtagelse == null) {
+        statusText = "Vælg territorium som skal tilføjes arméer";
+        
+        Territorium t = territoriumTrykketPå();
+        if (t != null) {
+          if (t.ejer == aktivSpiller) {
+            territoriumTilModtagelse = t;
+            return;
+          }
+        }
+      } else {
+        territoriumTilModtagelse.boendeArméer += antalArméerTilModtagelse;
+        
+        antalArméerTilModtagelse = 0;
+        territoriumTilModtagelse = null;
+        spilTilstand = SpilTilstand.ANGRIB;
+        return;
+      }
     }
 
 
@@ -148,6 +188,7 @@ class Risk {
         Territorium t = territoriumTrykketPå();
         if (t != null) {
           angribendeTerritorium = t;
+          return;
         }
       } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
         statusText = "Vælg territorium som skal angribes";
@@ -155,6 +196,7 @@ class Risk {
         Territorium t = territoriumTrykketPå();
         if (t != null) {
           forsvarendeTerritorium = t;
+          return;
         }
       } else {// Territorierne er valgt
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
