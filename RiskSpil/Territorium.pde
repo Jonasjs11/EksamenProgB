@@ -4,8 +4,9 @@ class Territorium {
   int boendeArméer = 4;
   PShape outline;
   
-  Territorium(PShape outline) {
+  Territorium(PShape outline, String navn) {
     this.outline = outline;
+    this.navn = navn;
   }
 
   void tilføjArméer() {
@@ -32,9 +33,20 @@ class Territorium {
   
   PVector midt(){
     PVector sum = new PVector(0, 0);
+    int amount = 1;
+    
+    PVector oldPoint = outline.getVertex(0);
+    sum.add(oldPoint);
+    
     for(int i = 0; i < outline.getVertexCount(); i++){
-      sum.add(outline.getVertex(i));
+      if(PVector.dist(oldPoint, outline.getVertex(i)) > 50){
+        sum.add(outline.getVertex(i));
+        oldPoint = outline.getVertex(i);
+        amount += 1;
+      }
     }
-    return sum.div(outline.getVertexCount());
+    
+    println(navn + " " + amount);
+    return sum.div(amount);
   }
 }

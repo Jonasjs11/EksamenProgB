@@ -58,7 +58,7 @@ class Risk {
 
     territorier = new Territorium[96-55+1]; //55-96
     for (int i = 0; i < territorier.length; i++) {
-      territorier[i] = new Territorium(kort.getChild(i+55));
+      territorier[i] = new Territorium(kort.getChild(i+55), kort.getChild(i+55).getName());
     }
   }
 
