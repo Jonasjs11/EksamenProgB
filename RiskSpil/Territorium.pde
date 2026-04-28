@@ -1,7 +1,7 @@
 class Territorium {
   String navn;
   Spiller ejer;
-  int boendeArméer;
+  int boendeArméer = 4;
   PShape outline;
   
   Territorium(PShape outline) {
@@ -22,9 +22,12 @@ class Territorium {
   
   void vis() {
     shape(outline, 0, 0);
-    fill(0);
     PVector m = midt();
-    circle(m.x, m.y, 10);
+    fill(255); //ejer.farve
+    rect(m.x,m.y,10,10);
+    fill(0);
+    textAlign(CENTER, CENTER);
+    text(boendeArméer,m.x+5,m.y+4.5);
   }
   
   PVector midt(){

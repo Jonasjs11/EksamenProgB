@@ -2,8 +2,8 @@ class Spiller {
   color farve;
   int arméTilRådighed;
   
-  Spiller() {
-    
+  Spiller(color spillerFarve) {
+    farve = spillerFarve;
   }
 
   void modtagArmé() {
