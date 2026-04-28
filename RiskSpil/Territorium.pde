@@ -22,9 +22,12 @@ class Territorium {
   
   void vis() {
     shape(outline, 0, 0);
-    fill(0);
     PVector m = midt();
-    circle(m.x, m.y, 10);
+    fill(ejer.farve);
+    rect(m.x-5,m.y-5,10,10);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text("X",m.x,m.y);
   }
   
   PVector midt(){
