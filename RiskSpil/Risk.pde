@@ -32,6 +32,10 @@ class Risk {
       spillere[i] = new Spiller(spillerFarver[i]);
     }
 
+    // SETUP AF ANDET
+    statusText = "";
+    spilTilstand = SpilTilstand.TILFØJ;
+    
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
     //kort.disableStyle();
@@ -82,8 +86,19 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-
-    text(statusText, width/2, 0);
+    
+    int statusWidth = 200;
+    int statusHeight = 50;
+    fill(255);
+    stroke(0);
+    strokeWeight(2);
+    rect(width/2 - statusWidth/2, height-statusHeight, statusWidth, statusHeight);
+    
+    fill(0);
+    strokeWeight(1);
+    textSize(24);
+    textAlign(CENTER, CENTER);
+    text(statusText, width/2, height-statusHeight/2);
   }
 
   Territorium territoriumTrykketPå() {
@@ -105,6 +120,7 @@ class Risk {
 
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
+      statusText = "Vælg territorium som skal tilføjes arméer";
     }
 
 
@@ -114,12 +130,14 @@ class Risk {
 
         Territorium t = territoriumTrykketPå();
         if (t != null) {
+          angribendeTerritorium = t;
         }
       } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
         statusText = "Vælg territorium som skal angribes";
 
         Territorium t = territoriumTrykketPå();
         if (t != null) {
+          forsvarendeTerritorium = t;
         }
       } else {// Territorierne er valgt
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
@@ -135,6 +153,7 @@ class Risk {
     }
 
     if (spilTilstand == SpilTilstand.FLYT) { //Den aktive spiller har mulighed for at flytte arméer
+      statusText = "Vælg territorium som skal flyttes arméer";
     }
   }
 }
