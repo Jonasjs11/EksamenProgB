@@ -27,8 +27,6 @@ class Risk {
 
 
   Risk(int antalSpillere) {
-
-
     // SETUP AF SPILLERE
     if (antalSpillere < 2 || antalSpillere > 5) {
       println("Mærkeligt antal spillere: " + antalSpillere);
@@ -44,13 +42,6 @@ class Risk {
 
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
-    //kort.disableStyle();
-
-    println(kort.getChildCount());
-
-    for (int i=0; i<kort.getChildCount(); i++) {
-      println(i + ": " + kort.getChild(i).getName());
-    }
 
     kystlinjer = new PShape[24]; //0-23
     for (int i = 0; i < kystlinjer.length; i++) {
@@ -67,11 +58,8 @@ class Risk {
       territorier[i] = new Territorium(kort.getChild(i+55), kort.getChild(i+55).getName());
     }
 
-
-
-
+    // SETUP AF TERNINGER
     rb = new Raflebaeger();
-    println("Raflebæger : " + rb );
 
     rb.addDice(new Terning(width/2, height/7 * 5, 6, color(255, 0, 0)));
     rb.addDice(new Terning(width/2 - 55, height/7 * 5 - 40, 6, color(255, 0, 0)));
@@ -91,6 +79,14 @@ class Risk {
     //gå videre til den næste spillere, og kær næste iteration af loopet
   }
 
+  void DEBUGCHILDREN(PShape kort) {
+    println(kort.getChildCount());
+
+    for (int i=0; i < kort.getChildCount(); i++) {
+      println(i + ": " + kort.getChild(i).getName());
+    }
+  }
+
   void vis() {
     background(#B9F4FF);
 
@@ -105,7 +101,7 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-    println("Rafflebæger2:" + rb);
+
     rb.show();
 
 
