@@ -171,7 +171,7 @@ class Risk {
           }
         }
       } else {
-        territoriumTilModtagelse.boendeArméer += antalArméerTilModtagelse;
+        territoriumTilModtagelse.tilføjArméer(antalArméerTilModtagelse);
         
         antalArméerTilModtagelse = 0;
         territoriumTilModtagelse = null;

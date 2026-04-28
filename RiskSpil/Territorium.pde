@@ -9,13 +9,16 @@ class Territorium {
     this.navn = navn;
   }
 
-  void tilføjArméer() {
+  void tilføjArméer(int antal) {
+    boendeArméer += antal;
   }
 
-  void fjernArméer() {
+  void fjernArméer(int antal) {
+    boendeArméer -= antal;
   }
 
-  void skiftEjer() {
+  void skiftEjer(Spiller nyEjer) {
+    ejer = nyEjer;
   }
 
   void vis() {
