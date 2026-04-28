@@ -5,10 +5,10 @@ class Risk {
   boolean[][] naboMatrice;
   Terning[] terninger;
   final color[] spillerFarver = new color[]{#FF0000, #00FF00, #0000FF, #FFFF00, #00FFFF};
-  
-  
+
+
   String statusText;
-  
+
   Spiller aktivSpiller;
   SpilTilstand spilTilstand;
 
@@ -18,7 +18,7 @@ class Risk {
   int antalAngribendeArméer;
   int antalForsvarendeArméer;
 
-  
+
   PShape[] kystlinjer;
   PShape[] baggrunde;
 
@@ -59,7 +59,6 @@ class Risk {
   }
 
   void fordelTerritorierTilfældigt() {
-    
   }
 
   void vis() {
@@ -76,51 +75,59 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-    
+
     text(statusText, width/2, 0);
   }
-  
-  Territorium territoriumTrykketPå(){
+
+  Territorium territoriumTrykketPå() {
+    if (mouseReleased == false) {
+      return null;
+    }
+
+    Territorium t = null;
+
+    for (int i = 0; i < territorier.length; i++) {
+      if (PVector.dist(new PVector(mouseX, mouseY), territorier[i].midt()) < 50) {
+        t = territorier[i];
+        return t;
+      }
+    }
+
     return null;
   }
-  
+
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
-      
     }
-    
-    
+
+
     if (spilTilstand == SpilTilstand.ANGRIB) { // Den aktive spiller har mulighed for at angribe
       if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg territorium som skal angribe";
-        
+
         Territorium t = territoriumTrykketPå();
-        if(t != null){
-          
+        if (t != null) {
         }
-      } else if (forsvarendeTerritorium == null){ // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
+      } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
         statusText = "Vælg territorium som skal angribes";
-        
+
         Territorium t = territoriumTrykketPå();
-        if(t != null){
-          
+        if (t != null) {
         }
       } else {// Territorierne er valgt
-        if (antalAngribendeArméer == -1){ // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
+        if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
         }
-        if (antalForsvarendeArméer == -1){ // Den forsvarende spiller skal vælge hvilket territorium der skal kæmpes mod
+        if (antalForsvarendeArméer == -1) { // Den forsvarende spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal forsvarende arméer";
         }
         if (antalAngribendeArméer != -1 && antalForsvarendeArméer != -1) { // Alt er valgt, terningerne skal kastes
           statusText = "Kast terningerne!";
-          
         }
       }
     }
-    
+
     if (spilTilstand == SpilTilstand.FLYT) { //Den aktive spiller har mulighed for at flytte arméer
-      
     }
   }
 }
