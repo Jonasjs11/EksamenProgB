@@ -182,28 +182,25 @@ class Risk {
   }
 
   void fordelTerritorierTilfældigt() {
-    ArrayList<Territorium> TerritorieListe = new ArrayList<Territorium>();
+    ArrayList<Territorium> TerritorieListe = new ArrayList<Territorium>(); // Liste med alle territorier
     for (int i = 0; i < territorier.length; i++) { 
       TerritorieListe.add(territorier[i]);
     }
-    int spillerIndex = 0;
-    for (int i = 0; i < territorier.length; i++) { 
+    
+    int spillerIndex = 0; // Nuværende spiller variabel tal
+    
+    for (int i = 0; i < territorier.length; i++) { // Loop igennem antallet af territorier
       int randomIndex = (int)random(0,TerritorieListe.size());
-      Territorium tilfældigtTerritorium = TerritorieListe.get(randomIndex);
-      tilfældigtTerritorium.skiftEjer(spillere[spillerIndex]);
-      TerritorieListe.remove(tilfældigtTerritorium);
-      spillerIndex = spillerIndex + 1;
+      Territorium tilfældigtTerritorium = TerritorieListe.get(randomIndex); // Vælg et tilfældigt territorie fra list
+      
+      tilfældigtTerritorium.skiftEjer(spillere[spillerIndex]); // Giv territoriet til spilleren
+      TerritorieListe.remove(tilfældigtTerritorium); // Fjern territoriet fra listen
+      
+      spillerIndex = spillerIndex + 1; // Gå videre til den næste spillere, og kær næste iteration af loopet
       if (spillerIndex >= spillere.length) {
         spillerIndex = 0; 
       }
     }
-    //liste med alle territorier
-    //nuværende spiller variabel tal
-    //loop igennem antallet af territorier
-    //Vælg et tilfældigt territorie fra list
-    //giv territoriet til spilleren
-    //fjern territoriet fra listen
-    //gå videre til den næste spillere, og kær næste iteration af loopet
   }
 
   void DEBUGCHILDREN(PShape kort) {
