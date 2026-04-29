@@ -29,7 +29,7 @@ class Territorium {
     
     PVector m = midt();
     
-    fill(255); //ejer.farve
+    fill(ejer.farve);
     int arméKasseWidth = 30;
     int arméKasseHeight = 15;
     rect(m.x-arméKasseWidth/2, m.y-arméKasseHeight/2, arméKasseWidth, arméKasseHeight);
