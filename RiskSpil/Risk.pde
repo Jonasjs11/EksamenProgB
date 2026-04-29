@@ -22,8 +22,8 @@ class Risk {
   // VARIABLER TIL KRIG
   Territorium angribendeTerritorium;
   Territorium forsvarendeTerritorium;
-  int antalAngribendeArméer;
-  int antalForsvarendeArméer;
+  int antalAngribendeArméer = -1;
+  int antalForsvarendeArméer = -1;
   
   // VARIABLER TIL FLYTTELSE
   Territorium territoriumTilFraflytning;
@@ -88,6 +88,18 @@ class Risk {
     spilTilstand = SpilTilstand.TILFØJ;
     antalArméerTilModtagelse = max(floor(antalTerritorierEjetAfSpiller(aktivSpiller) / 3), 3); // Antal territorier man ejer divideret med 3, men altid minimum 3 nye arméer
     //DER SKAL TILFØJES KONTINENT-BONUS HER
+  }
+  
+  void skiftTurTilNæsteSpiller(){
+    int nuværendeSpillerIndex = 0;
+    for (int i = 0; i < spillere.length; i++) {
+      if (aktivSpiller == spillere[i]) {
+        nuværendeSpillerIndex = i;
+      }
+    }
+    nuværendeSpillerIndex++;
+    if (nuværendeSpillerIndex >= spillere.length) { nuværendeSpillerIndex = 0; }
+    skiftTurTil(spillere[nuværendeSpillerIndex]);
   }
   
   int antalTerritorierEjetAfSpiller(Spiller spiller){
@@ -262,8 +274,7 @@ class Risk {
             antalAngribendeArméer = numberReleased;
             return;
           }
-        }
-        if (antalForsvarendeArméer == -1) { // Den forsvarende spiller skal vælge hvilket territorium der skal kæmpes mod
+        } else if (antalForsvarendeArméer == -1) { // Den forsvarende spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal forsvarende arméer";
           
           if (numberReleased >= 1 && numberReleased <= 2) {
@@ -279,8 +290,8 @@ class Risk {
             
             sammenlignTerningerOgLavKrig();
             
-            antalAngribendeArméer = 0;
-            antalForsvarendeArméer = 0;
+            antalAngribendeArméer = -1;
+            antalForsvarendeArméer = -1;
             angribendeTerritorium = null;
             forsvarendeTerritorium = null;
             spilTilstand = SpilTilstand.FLYT;
@@ -322,6 +333,10 @@ class Risk {
         if (numberReleased >= 1 && territoriumTilFraflytning.boendeArméer() - numberReleased >= 1) { // Der skal være mindst én armé tilbage
           territoriumTilFraflytning.fjernArméer(numberReleased);
           territoriumTilTilflytning.tilføjArméer(numberReleased);
+          
+          territoriumTilFraflytning = null;
+          territoriumTilTilflytning = null;
+          skiftTurTilNæsteSpiller();
         }
       }
     }
