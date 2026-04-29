@@ -112,7 +112,7 @@ class Risk {
 
     territorier = new Territorium[96-55+1]; //55-96
     for (int i = 0; i < territorier.length; i++) {
-      territorier[i] = new Territorium(kort.getChild(i+55), kort.getChild(i+55).getName());
+      territorier[i] = new Territorium(kort.getChild(i+55), kort.getChild(i+55).getName().replace("_Outline", "").replace("_", " ")); // Fjern "_Outline" og erstat "_" med " "
     }
 
     // SETUP AF TERNINGER
@@ -163,12 +163,77 @@ class Risk {
     }
     
     for (int i = 0; i < territorier.length; i++) {
-      if (naboMatrice[indexStart][i] == true) {
+      if (naboMatrice[indexStart][i] == F) {
         naboLande.add(territorier[i]);
       }
     }
     
     return naboLande;
+  }
+  
+  ArrayList<Territorium> findFjendtligeNaboLande(Territorium start, Spiller spiller){
+    ArrayList<Territorium> fjendtligeNaboLande = new ArrayList<Territorium>();
+    
+    ArrayList<Territorium> naboLande = findNaboLande(start);
+    for (int i = 0; i < naboLande.size(); i++) {
+      if (naboLande.get(i).ejer() != spiller) {
+        fjendtligeNaboLande.add(naboLande.get(i));
+      }
+    }
+    
+    return fjendtligeNaboLande;
+  }
+  
+  ArrayList<Territorium> findTerritorierEjetAfSpiller(Spiller spiller){
+    ArrayList<Territorium> ejedeTerritorier = new ArrayList<Territorium>();
+    
+    for (int i = 0; i < territorier.length; i++) {
+      if (territorier[i].ejer() == spiller) {
+        ejedeTerritorier.add(territorier[i]);
+      }
+    }
+    
+    return ejedeTerritorier;
+  }
+  
+  ArrayList<Territorium> findAlleTerritorierMedFjendtligeNaboLande(Spiller spiller){
+    ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = new ArrayList<Territorium>();
+    
+    ArrayList<Territorium> ejedeTerritorier = findTerritorierEjetAfSpiller(spiller);
+    for (int e = 0; e < ejedeTerritorier.size(); e++) {
+      ArrayList<Territorium> fjendtligeNaboLande = findFjendtligeNaboLande(ejedeTerritorier.get(e), spiller);
+      if (fjendtligeNaboLande.size() > 0) {
+        alleTerritorierMedFjendtligeNaboLande.add(ejedeTerritorier.get(e));
+      }
+    }
+    
+    return alleTerritorierMedFjendtligeNaboLande;
+  }
+  
+  ArrayList<Territorium> findAlleFjendtligeNaboLande(Spiller spiller){
+    ArrayList<Territorium> alleFjendtligeNaboLande = new ArrayList<Territorium>();
+    
+    ArrayList<Territorium> ejedeTerritorier = findTerritorierEjetAfSpiller(spiller);
+    for (int e = 0; e < ejedeTerritorier.size(); e++) {
+      ArrayList<Territorium> fjendtligeNaboLande = findFjendtligeNaboLande(ejedeTerritorier.get(e), spiller);
+      for (int n = 0; n < fjendtligeNaboLande.size(); n++) {
+        alleFjendtligeNaboLande.add(fjendtligeNaboLande.get(n));
+      }
+    }
+    
+    return alleFjendtligeNaboLande;
+  }
+  
+  ArrayList<Territorium> findAlleForbundneTerritorier(Territorium start, Spiller spiller){
+    ArrayList<Territorium> alleForbundneTerritorier = new ArrayList<Territorium>();
+    
+    return findTerritorierEjetAfSpiller(spiller);
+  }
+  
+  ArrayList<Territorium> findAlleTerritorierMedForbundneTerritorier(Spiller spiller){
+    ArrayList<Territorium> alleTerritorierMedForbundneTerritorier = new ArrayList<Territorium>();
+    
+    return findTerritorierEjetAfSpiller(spiller);
   }
   
   int antalTerritorierEjetAfSpiller(Spiller spiller){
@@ -254,16 +319,13 @@ class Risk {
     text(statusText, width/2, height-terningKasseHøjde-statusHøjde/2);
   }
 
-  final int radiusAfTrykOmråde = 30;
-  Territorium territoriumTrykketPå(Spiller markeringsSpiller, boolean alleEksklusivSpilleren) {
-    for (int i = 0; i < territorier.length; i++) {
-      if (markeringsSpiller == null || (alleEksklusivSpilleren == false && territorier[i].ejer() == markeringsSpiller) || (alleEksklusivSpilleren == true && territorier[i].ejer() != markeringsSpiller)) {
-        territorier[i].markerTerritoriumMedCirkel(radiusAfTrykOmråde, #F5CF97);
-      }
+  void markerTerritorierMedCirkel(ArrayList<Territorium> territorierTiLMarkering){
+    for (int i = 0; i < territorierTiLMarkering.size(); i++) {
+      territorierTiLMarkering.get(i).markerTerritoriumMedCirkel(20, #FFE59D);
     }
-    
-    return territoriumTrykketPå();
   }
+
+  final int radiusAfTrykOmråde = 30;
   Territorium territoriumTrykketPå() {
     if (mouseReleased == false) { return null; }
 
@@ -289,7 +351,10 @@ class Risk {
       if (territoriumTilModtagelse == null) {
         statusText = "Vælg modtagende territorium";
         
-        Territorium t = territoriumTrykketPå(aktivSpiller, false);
+        ArrayList<Territorium> alleTerritorierEjetAfSpiller = findTerritorierEjetAfSpiller(aktivSpiller);
+        markerTerritorierMedCirkel(alleTerritorierEjetAfSpiller);
+        
+        Territorium t = territoriumTrykketPå();
         if (t != null) {
           if (t.ejer() == aktivSpiller) {
             territoriumTilModtagelse = t;
@@ -310,10 +375,13 @@ class Risk {
     if (spilTilstand == SpilTilstand.ANGRIB) { // Den aktive spiller har mulighed for at angribe
       if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg angribende territorium";
-
-        Territorium t = territoriumTrykketPå(aktivSpiller, false);
+        
+        ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
+        markerTerritorierMedCirkel(alleTerritorierMedFjendtligeNaboLande);
+        
+        Territorium t = territoriumTrykketPå();
         if (t != null) {
-          if (t.ejer() == aktivSpiller && t.boendeArméer() >= 2) {
+          if (alleTerritorierMedFjendtligeNaboLande.contains(t) && t.boendeArméer() >= 2) {
             angribendeTerritorium = t;
             return;
           }
@@ -322,9 +390,12 @@ class Risk {
         statusText = "Vælg territorium til angreb";
         angribendeTerritorium.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
 
-        Territorium t = territoriumTrykketPå(aktivSpiller, true);
+        ArrayList<Territorium> alleFjendtligeNaboLande = findFjendtligeNaboLande(angribendeTerritorium, aktivSpiller);
+        markerTerritorierMedCirkel(alleFjendtligeNaboLande);
+
+        Territorium t = territoriumTrykketPå();
         if (t != null) {
-          if (t.ejer() != aktivSpiller) {
+          if (alleFjendtligeNaboLande.contains(t)) {
             forsvarendeTerritorium = t;
             return;
           }
@@ -371,9 +442,12 @@ class Risk {
       if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
         statusText = "Vælg fraflyttende territorium";
         
-        Territorium t = territoriumTrykketPå(aktivSpiller, false);
+        ArrayList<Territorium> alleTerritorierMedForbundneTerritorier = findAlleTerritorierMedForbundneTerritorier(aktivSpiller);
+        markerTerritorierMedCirkel(alleTerritorierMedForbundneTerritorier);
+        
+        Territorium t = territoriumTrykketPå();
         if (t != null) {
-          if (t.ejer() == aktivSpiller && t.boendeArméer() >= 2) {
+          if (alleTerritorierMedForbundneTerritorier.contains(t) && t.boendeArméer() >= 2) {
             territoriumTilFraflytning = t;
             return;
           }
@@ -383,9 +457,12 @@ class Risk {
         
         territoriumTilFraflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
         
-        Territorium t = territoriumTrykketPå(aktivSpiller, false);
+        ArrayList<Territorium> alleForbundneTerritorier = findAlleForbundneTerritorier(territoriumTilFraflytning, aktivSpiller);
+        markerTerritorierMedCirkel(alleForbundneTerritorier);
+        
+        Territorium t = territoriumTrykketPå();
         if (t != null) {
-          if (t.ejer() == aktivSpiller && territorierErForbundede(territoriumTilFraflytning, t)) {
+          if (alleForbundneTerritorier.contains(t) && territorierErForbundede(territoriumTilFraflytning, t)) {
             territoriumTilTilflytning = t;
             return;
           }

@@ -61,7 +61,7 @@ class Territorium {
   void markerTerritoriumMedCirkel(int radius, color farve){
     PVector m = midt();
     noStroke();
-    fill(red(farve), green(farve), blue(farve), 100);
+    fill(red(farve), green(farve), blue(farve), 150);
     circle(m.x, m.y, radius);
   }
 }
