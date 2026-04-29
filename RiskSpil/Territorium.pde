@@ -3,6 +3,9 @@ class Territorium {
   Spiller ejer;
   int boendeArméer = 4;
   PShape outline;
+  
+  Spiller ejer() { return ejer; }
+  int boendeArméer() { return boendeArméer; }
 
   Territorium(PShape outline, String navn) {
     this.outline = outline;
@@ -23,11 +26,17 @@ class Territorium {
 
   void vis() {
     shape(outline, 0, 0);
+    
     PVector m = midt();
+    
     fill(255); //ejer.farve
-    rect(m.x-5, m.y-5, 10, 10);
+    int arméKasseWidth = 30;
+    int arméKasseHeight = 15;
+    rect(m.x-arméKasseWidth/2, m.y-arméKasseHeight/2, arméKasseWidth, arméKasseHeight);
+    
     fill(0);
     textAlign(CENTER, CENTER);
+    textSize(arméKasseHeight*0.9);
     text(boendeArméer, m.x, m.y);
   }
 

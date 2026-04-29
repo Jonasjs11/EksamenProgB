@@ -41,7 +41,7 @@ class Risk {
     }
     spillere = new Spiller[antalSpillere];
     for (int i = 0; i < spillere.length; i++) {
-      spillere[i] = new Spiller(spillerFarver[i]);
+      spillere[i] = new Spiller(spillerFarver[i], str(i), new PVector(25+floor(i/2)*625+(i%2)*175, height), 150, 100);
     }
 
     // SETUP AF ANDET
@@ -69,7 +69,7 @@ class Risk {
     rb = new Raflebaeger();
 
     rb.addDice(new Terning(width/2, height/7 * 5, 6, color(255, 0, 0)));
-    rb.addDice(new Terning(width/2 - 55, height/7 * 5 - 40, 6, color(255, 0, 0)));
+    rb.addDice(new Terning(width/2 -55, height/7 * 5 - 40, 6, color(255, 0, 0)));
     rb.addDice(new Terning(width/2 +55, height/7 * 5 - 40, 6, color(0, 0, 255)));
     rb.addDice(new Terning(width/2 +55, height/7 * 5 + 40, 6, color(0, 0, 255)));
     rb.addDice(new Terning(width/2 -55, height/7 * 5 + 40, 6, color(255, 0, 0)));
@@ -93,7 +93,7 @@ class Risk {
   int antalTerritorierEjetAfSpiller(Spiller spiller){
     int antal = 0;
     for (int i = 0; i < territorier.length; i++) {
-      if (territorier[i].ejer == spiller) {
+      if (territorier[i].ejer() == spiller) {
         antal += 1;
       }
     }
@@ -134,25 +134,37 @@ class Risk {
     }
 
     rb.show();
+    
+    for (Spiller spiller : spillere) {
+      spiller.vis();
+    }
+    
+    
+    fill(255);
+    strokeWeight(1);
+    stroke(0);
+    int terningKasseBredde = 250;
+    int terningKasseHøjde = 100;
+    rect(width/2-terningKasseBredde/2, height-terningKasseHøjde, terningKasseBredde, terningKasseHøjde);
 
 
-    int statusWidth = 200;
-    int statusHeight = 50;
+    int statusBredde = 200;
+    int statusHøjde = 30;
     fill(255);
     stroke(0);
     strokeWeight(2);
-    rect(width/2 - statusWidth/2, height-statusHeight, statusWidth, statusHeight);
+    rect(width/2 - statusBredde/2, height-terningKasseHøjde-statusHøjde, statusBredde, statusHøjde);
     fill(0);
     strokeWeight(1);
-    textSize(24);
+    textSize(14);
     textAlign(CENTER, CENTER);
-    text(statusText, width/2, height-statusHeight/2);
+    text(statusText, width/2, height-terningKasseHøjde-statusHøjde/2);
   }
 
   final int radiusAfTrykOmråde = 30;
   Territorium territoriumTrykketPå(Spiller markeringsSpiller, boolean alleEksklusivSpilleren) {
     for (int i = 0; i < territorier.length; i++) {
-      if (markeringsSpiller == null || (alleEksklusivSpilleren == false && territorier[i].ejer == markeringsSpiller) || (alleEksklusivSpilleren == true && territorier[i].ejer != markeringsSpiller)) {
+      if (markeringsSpiller == null || (alleEksklusivSpilleren == false && territorier[i].ejer() == markeringsSpiller) || (alleEksklusivSpilleren == true && territorier[i].ejer() != markeringsSpiller)) {
         territorier[i].markerTerritoriumMedCirkel(radiusAfTrykOmråde, #F5CF97);
       }
     }
@@ -182,11 +194,11 @@ class Risk {
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
       if (territoriumTilModtagelse == null) {
-        statusText = "Vælg territorium som skal modtage arméer";
+        statusText = "Vælg modtagende territorium";
         
         Territorium t = territoriumTrykketPå(aktivSpiller, false);
         if (t != null) {
-          if (t.ejer == aktivSpiller) {
+          if (t.ejer() == aktivSpiller) {
             territoriumTilModtagelse = t;
             return;
           }
@@ -204,22 +216,22 @@ class Risk {
 
     if (spilTilstand == SpilTilstand.ANGRIB) { // Den aktive spiller har mulighed for at angribe
       if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
-        statusText = "Vælg territorium som skal angribe";
+        statusText = "Vælg angribende territorium";
 
         Territorium t = territoriumTrykketPå(aktivSpiller, false);
         if (t != null) {
-          if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
+          if (t.ejer() == aktivSpiller && t.boendeArméer() >= 2) {
             angribendeTerritorium = t;
             return;
           }
         }
       } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
-        statusText = "Vælg territorium som skal angribes";
+        statusText = "Vælg territorium til angreb";
         angribendeTerritorium.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
 
         Territorium t = territoriumTrykketPå(aktivSpiller, true);
         if (t != null) {
-          if (t.ejer != aktivSpiller) {
+          if (t.ejer() != aktivSpiller) {
             forsvarendeTerritorium = t;
             return;
           }
@@ -231,7 +243,7 @@ class Risk {
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
           
-          if ((numberReleased >= 1 && numberReleased <= 3) && (angribendeTerritorium.boendeArméer - numberReleased >= 1)) { // Man kan angribe med 1, 2 eller 3 arméer, og der skal være mindst én tilbage
+          if ((numberReleased >= 1 && numberReleased <= 3) && (angribendeTerritorium.boendeArméer() - numberReleased >= 1)) { // Man kan angribe med 1, 2 eller 3 arméer, og der skal være mindst én tilbage
             antalAngribendeArméer = numberReleased;
             return;
           }
@@ -265,23 +277,23 @@ class Risk {
 
     if (spilTilstand == SpilTilstand.FLYT) { // Den aktive spiller har mulighed for at flytte arméer
       if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
-        statusText = "Vælg territorium som skal flyttes arméer fra";
+        statusText = "Vælg fraflyttende territorium";
         
         Territorium t = territoriumTrykketPå(aktivSpiller, false);
         if (t != null) {
-          if (t.ejer == aktivSpiller && t.boendeArméer >= 2) {
+          if (t.ejer() == aktivSpiller && t.boendeArméer() >= 2) {
             territoriumTilFraflytning = t;
             return;
           }
         }
       } else if (territoriumTilTilflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer til
-        statusText = "Vælg territorium som skal flyttes arméer til";
+        statusText = "Vælg tilflyttende territorium";
         
         territoriumTilFraflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
         
         Territorium t = territoriumTrykketPå(aktivSpiller, false);
         if (t != null) {
-          if (t.ejer == aktivSpiller && territorierErForbundede(territoriumTilFraflytning, t)) {
+          if (t.ejer() == aktivSpiller && territorierErForbundede(territoriumTilFraflytning, t)) {
             territoriumTilTilflytning = t;
             return;
           }
@@ -292,7 +304,7 @@ class Risk {
         territoriumTilFraflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
         territoriumTilTilflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt tilflytning territorium
         
-        if (numberReleased >= 1 && territoriumTilFraflytning.boendeArméer - numberReleased >= 1) { // Der skal være mindst én armé tilbage
+        if (numberReleased >= 1 && territoriumTilFraflytning.boendeArméer() - numberReleased >= 1) { // Der skal være mindst én armé tilbage
           territoriumTilFraflytning.fjernArméer(numberReleased);
           territoriumTilTilflytning.tilføjArméer(numberReleased);
         }
