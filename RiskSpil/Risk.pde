@@ -8,7 +8,8 @@ class Risk {
   boolean[][] naboMatrice;
   Terning[] terninger;
   final color[] spillerFarver = new color[]{#FF0000, #00FF00, #0000FF, #FFFF00, #00FFFF};
-
+  final boolean F = true;
+  final boolean N = false;
 
   String statusText;
 
@@ -46,6 +47,55 @@ class Risk {
 
     // SETUP AF ANDET
     statusText = "Klar til start.";
+    
+    // SETUP AF NABOMATRICE
+    naboMatrice = new boolean[][]{
+      /*            00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41*/
+      /*00-EaAu*/  {N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N}, /*00-EaAu*/
+      /*01-Indo*/  {N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N}, /*01-Indo*/
+      /*02-NeGu*/  {F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N}, /*02-NeGu*/
+      /*03-Alas*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F}, /*03-Alas*/
+      /*04-Onta*/  {N, N, N, N, N, F, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, F, N, N, N, F}, /*04-Onta*/
+      /*05-NoTe*/  {N, N, N, F, F, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F}, /*05-NoTe*/
+      /*06-Vene*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N}, /*06-Vene*/
+      /*07-Mada*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N}, /*07-Mada*/
+      /*08-NoAf*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, F, F, F, N, F, N, N, N, N, N, N, N, N}, /*08-NoAf*/
+      /*09-Gree*/  {N, N, N, N, F, F, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N}, /*09-Gree*/
+      /*10-Icel*/  {N, N, N, N, N, N, N, N, N, F, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*10-Icel*/
+      /*11-GrBr*/  {N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*11-GrBr*/
+      /*12-Scan*/  {N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*12-Scan*/
+      /*13-Japa*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*13-Japa*/
+      /*14-Yaku*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*14-Yaku*/
+      /*15-Kamc*/  {N, N, N, F, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*15-Kamc*/
+      /*16-Sibe*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, F, N, N, N, N, F, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*16-Sibe*/
+      /*17-Ural*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, F, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*17-Ural*/
+      /*18-Afgh*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, F, N, F, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*18-Afgh*/
+      /*19-MiEa*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, F, F, N, N, F, F, N, N, N, N, N, N, N, N, N, N, N}, /*19-MiEa*/
+      /*20-Indi*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*20-Indi*/
+      /*21-Siam*/  {N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*21-Siam*/
+      /*22-Chin*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, F, N, F, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*22-Chin*/
+      /*23-Mong*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, F, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*23-Mong*/
+      /*24-Irkt*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, F, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*24-Irkt*/
+      /*25-Ukra*/  {N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, F, F, F, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*25-Ukra*/
+      /*26-SoEu*/  {N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, F, N, F, F, F, N, N, N, N, N, N, N, N, N, N, N, N}, /*26-SoEu*/
+      /*27-WeEu*/  {N, N, N, N, N, N, N, N, F, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*27-WeEu*/
+      /*28-NoEu*/  {N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N, N, N, F, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*28-NoEu*/
+      /*29-Egyp*/  {N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, F, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N}, /*29-Egyp*/
+      /*30-EaAf*/  {N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, F, N, F, F, N, N, N, N, N, N, N, N, N}, /*30-EaAf*/
+      /*31-Cong*/  {N, N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N}, /*31-Cong*/
+      /*32-SoAf*/  {N, N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N, N, N, N}, /*32-SoAf*/
+      /*33-Braz*/  {N, N, N, N, N, N, F, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, F, N, N}, /*33-Braz*/
+      /*34-Arge*/  {N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, F, N, N}, /*34-Arge*/
+      /*35-EaUS*/  {N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, F, N, N, N}, /*35-EaUS*/
+      /*36-WeUS*/  {N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, F, N, N, F}, /*36-WeUS*/
+      /*37-Queb*/  {N, N, N, N, F, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N, N}, /*37-Queb*/
+      /*38-CeAm*/  {N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N}, /*38-CeAm*/
+      /*39-Peru*/  {N, N, N, N, N, N, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, F, N, N, N, N, N, N, N}, /*39-Peru*/
+      /*40-WeAu*/  {F, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N}, /*40-WeAu*/
+      /*41-Albe*/  {N, N, N, F, F, F, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, N, F, N, N, N, N, N}  /*41-Albe*/
+      /*            00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41*/
+    };
+    
 
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
@@ -102,6 +152,25 @@ class Risk {
     skiftTurTil(spillere[nuværendeSpillerIndex]);
   }
   
+  ArrayList<Territorium> findNaboLande(Territorium start){
+    ArrayList<Territorium> naboLande = new ArrayList<Territorium>();
+    
+    int indexStart = -1;
+    for (int i = 0; i < territorier.length; i++) {
+      if (territorier[i] == start) {
+        indexStart = i;
+      }
+    }
+    
+    for (int i = 0; i < territorier.length; i++) {
+      if (naboMatrice[indexStart][i] == true) {
+        naboLande.add(territorier[i]);
+      }
+    }
+    
+    return naboLande;
+  }
+  
   int antalTerritorierEjetAfSpiller(Spiller spiller){
     int antal = 0;
     for (int i = 0; i < territorier.length; i++) {
@@ -141,7 +210,7 @@ class Risk {
     println(kort.getChildCount());
 
     for (int i=0; i < kort.getChildCount(); i++) {
-      println(i + ": " + kort.getChild(i).getName());
+      println(i-55 + ": " + kort.getChild(i).getName());
     }
   }
 
