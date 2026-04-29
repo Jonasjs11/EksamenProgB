@@ -16,8 +16,8 @@ class Territorium {
     
   }
   
-  void skiftEjer() {
-    
+  void skiftEjer(Spiller nyEjer) {
+    ejer = nyEjer;
   }
   
   void vis() {
