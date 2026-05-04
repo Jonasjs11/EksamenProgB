@@ -493,7 +493,47 @@ class Risk {
     return true;
   }
   
-  void sammenlignTerningerOgLavKrig() {
-    
+void sammenlignTerningerOgLavKrig() {
+
+  kastTerninger();
+
+  int[] angriber = new int[antalAngribendeArméer];
+  int[] forsvarer = new int[antalForsvarendeArméer];
+
+  // Henter værdierne
+  for (int i = 0; i < angriber.length; i++) {
+    angriber[i] = rb.terninger.get(i).getValue();
   }
+
+  for (int i = 0; i < forsvarer.length; i++) {
+    forsvarer[i] = rb.terninger.get(i + 3).getValue();
+  }
+
+  // Sorter lav til høj
+  angriber = sort(angriber);
+  forsvarer = sort(forsvarer);
+  // length er hvor mange angriber og forsvare der er
+  int fights = min(angriber.length, forsvarer.length);
+
+  // Sammenlign højeste først
+  for (int i = 0; i < fights; i++) {
+
+    int a = angriber[angriber.length - 1 - i];
+    int f = forsvarer[forsvarer.length - 1 - i];
+
+    if (a > f) {
+      forsvarendeTerritorium.fjernArméer(1);
+    } else {
+      angribendeTerritorium.fjernArméer(1);
+    }
+  }
+
+  // Overtagelse
+  if (forsvarendeTerritorium.boendeArméer() <= 0) {
+    forsvarendeTerritorium.skiftEjer(aktivSpiller);
+
+    angribendeTerritorium.fjernArméer(antalAngribendeArméer);
+    forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
+  }
+}
 }
