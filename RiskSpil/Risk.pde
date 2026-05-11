@@ -376,6 +376,17 @@ class Risk {
       if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg angribende territorium";
         
+        fill(127);
+        rect(width/2-75, height-50-25, 150, 50);
+        textAlign(CENTER, CENTER);
+        textSize(24);
+        fill(0);
+        text("Spring over", width/2, height-50);
+        if (mouseReleased && areaHover(width/2-75, height-50-25, 150, 50)){
+          spilTilstand = SpilTilstand.FLYT;
+          return;
+        }
+        
         ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
         markerTerritorierMedCirkel(alleTerritorierMedFjendtligeNaboLande);
         
@@ -431,7 +442,18 @@ class Risk {
             antalForsvarendeArméer = -1;
             angribendeTerritorium = null;
             forsvarendeTerritorium = null;
-            spilTilstand = SpilTilstand.FLYT;
+            
+            boolean kanAngribeIgen = false;
+            ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
+            for (Territorium t : alleTerritorierMedFjendtligeNaboLande) {
+              if (t.boendeArméer() >= 2) {
+                kanAngribeIgen = true;
+              }
+            }
+            if (kanAngribeIgen == false) {
+              spilTilstand = SpilTilstand.FLYT;
+            }
+            
             return;
           }
         }
@@ -493,47 +515,44 @@ class Risk {
     return true;
   }
   
-void sammenlignTerningerOgLavKrig() {
-
-  kastTerninger();
-
-  int[] angriber = new int[antalAngribendeArméer];
-  int[] forsvarer = new int[antalForsvarendeArméer];
-
-  // Henter værdierne
-  for (int i = 0; i < angriber.length; i++) {
-    angriber[i] = rb.terninger.get(i).getValue();
-  }
-
-  for (int i = 0; i < forsvarer.length; i++) {
-    forsvarer[i] = rb.terninger.get(i + 3).getValue();
-  }
-
-  // Sorter lav til høj
-  angriber = sort(angriber);
-  forsvarer = sort(forsvarer);
-  // length er hvor mange angriber og forsvare der er
-  int fights = min(angriber.length, forsvarer.length);
-
-  // Sammenlign højeste først
-  for (int i = 0; i < fights; i++) {
-
-    int a = angriber[angriber.length - 1 - i];
-    int f = forsvarer[forsvarer.length - 1 - i];
-
-    if (a > f) {
-      forsvarendeTerritorium.fjernArméer(1);
-    } else {
-      angribendeTerritorium.fjernArméer(1);
+  void sammenlignTerningerOgLavKrig() {
+    int[] angriber = new int[antalAngribendeArméer];
+    int[] forsvarer = new int[antalForsvarendeArméer];
+  
+    // Henter værdierne
+    for (int i = 0; i < angriber.length; i++) {
+      angriber[i] = rb.terninger.get(i).getValue();
+    }
+  
+    for (int i = 0; i < forsvarer.length; i++) {
+      forsvarer[i] = rb.terninger.get(i + 3).getValue();
+    }
+  
+    // Sorter lav til høj
+    angriber = sort(angriber);
+    forsvarer = sort(forsvarer);
+    // length er hvor mange angriber og forsvare der er
+    int fights = min(angriber.length, forsvarer.length);
+  
+    // Sammenlign højeste først
+    for (int i = 0; i < fights; i++) {
+  
+      int a = angriber[angriber.length - 1 - i];
+      int f = forsvarer[forsvarer.length - 1 - i];
+  
+      if (a > f) {
+        forsvarendeTerritorium.fjernArméer(1);
+      } else {
+        angribendeTerritorium.fjernArméer(1);
+      }
+    }
+  
+    // Overtagelse
+    if (forsvarendeTerritorium.boendeArméer() <= 0) {
+      forsvarendeTerritorium.skiftEjer(aktivSpiller);
+  
+      angribendeTerritorium.fjernArméer(antalAngribendeArméer);
+      forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
     }
   }
-
-  // Overtagelse
-  if (forsvarendeTerritorium.boendeArméer() <= 0) {
-    forsvarendeTerritorium.skiftEjer(aktivSpiller);
-
-    angribendeTerritorium.fjernArméer(antalAngribendeArméer);
-    forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
-  }
-}
 }
