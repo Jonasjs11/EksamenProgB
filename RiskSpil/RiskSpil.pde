@@ -3,7 +3,7 @@ boolean mouseReleased = false;
 int numberReleased = -1;
 
 void setup(){
-  size(1000, 1000);
+  size(800, 800);
   
   risk = new Risk(4);
   risk.fordelTerritorierTilfældigt();
