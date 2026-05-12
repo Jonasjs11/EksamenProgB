@@ -6,6 +6,8 @@ class Risk {
   Spiller[] spillere;
   Territorium[] territorier;
   boolean[][] naboMatrice;
+  int[][] kontinenter;
+  int[] kontinentBonuser;
   Terning[] terninger;
   final color[] spillerFarver = new color[]{#FF0000, #00FF00, #0000FF, #FFFF00, #00FFFF};
   final boolean F = true;
@@ -96,6 +98,17 @@ class Risk {
       /*            00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41*/
     };
     
+    kontinenter = new int[][]{
+      {3, 5, 9, 41, 4, 37, 36, 35, 38}, // North America
+      {6, 39, 33, 34}, // South America
+      {10, 12, 25, 11, 28, 26, 27}, // Europe
+      {8, 29, 31, 30, 32, 7}, // Africa
+      {17, 16, 14, 15, 24, 23, 18, 22, 19, 20, 21, 13}, // Asia
+      {1, 2, 40, 0}  // Oceania
+    };
+    
+    kontinentBonuser = new int[]{5, 2, 5, 3, 7, 2};
+    
 
     // SETUP AF KORT
     PShape kort = loadShape("Bræt.svg");
@@ -137,7 +150,28 @@ class Risk {
     
     spilTilstand = SpilTilstand.TILFØJ;
     antalArméerTilModtagelse = max(floor(antalTerritorierEjetAfSpiller(aktivSpiller) / 3), 3); // Antal territorier man ejer divideret med 3, men altid minimum 3 nye arméer
-    //DER SKAL TILFØJES KONTINENT-BONUS HER
+    antalArméerTilModtagelse += findSamletKontinentBonus(aktivSpiller);
+  }
+  
+  int findSamletKontinentBonus(Spiller spiller){
+    int bonus = 0;
+    
+    for (int i = 0; i < kontinenter.length; i++) {
+      if (spillerEjerKontinent(i, spiller)) {
+        bonus += kontinentBonuser[i];
+      }
+    }
+    
+    return bonus;
+  }
+  
+  boolean spillerEjerKontinent(int kontinentIndex, Spiller spiller){
+    for (int i = 0; i < kontinenter[kontinentIndex].length; i++) {
+      if (territorier[kontinenter[kontinentIndex][i]].ejer() != spiller) {
+        return false;
+      }
+    }
+    return true;
   }
   
   void skiftTurTilNæsteSpiller(){
