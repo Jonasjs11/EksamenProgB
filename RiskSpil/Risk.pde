@@ -479,7 +479,6 @@ class Risk {
             antalForsvarendeArméer = -1;
             angribendeTerritorium = null;
             forsvarendeTerritorium = null;
-<<<<<<< Updated upstream
             
             boolean kanAngribeIgen = false;
             ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
@@ -492,13 +491,10 @@ class Risk {
               spilTilstand = SpilTilstand.FLYT;
             }
             
-=======
-            if (aktivSpillerHarErobretTerritorie){
-              
+            if (aktivSpillerHarErobretTerritorie){ 
+              // Giv spiller et territorie kort her
+              aktivSpillerHarErobretTerritorie = false;
             }
-            aktivSpillerHarErobretTerritorie = false;
-            spilTilstand = SpilTilstand.FLYT;
->>>>>>> Stashed changes
             return;
           }
         }
@@ -597,20 +593,8 @@ class Risk {
   
       angribendeTerritorium.fjernArméer(antalAngribendeArméer);
       forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
+      
+      aktivSpillerHarErobretTerritorie = true;
     }
   }
-<<<<<<< Updated upstream
-=======
-
-  // Overtagelse
-  if (forsvarendeTerritorium.boendeArméer() <= 0) {
-    forsvarendeTerritorium.skiftEjer(aktivSpiller);
-
-    angribendeTerritorium.fjernArméer(antalAngribendeArméer);
-    forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
-    
-    aktivSpillerHarErobretTerritorie = true;
-  }
-}
->>>>>>> Stashed changes
 }
