@@ -384,7 +384,7 @@ class Risk {
   }
   
   void tilstandTilføj(){
-    if (territoriumTilModtagelse == null) {
+    if (territoriumTilModtagelse == null) { // Den aktive spiller skal vælge et territorium til modtagelse
         statusText = "Vælg modtagende territorium";
         
         ArrayList<Territorium> alleTerritorierEjetAfSpiller = findTerritorierEjetAfSpiller(aktivSpiller);
