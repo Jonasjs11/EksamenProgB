@@ -243,20 +243,7 @@ class Risk {
     
     return alleTerritorierMedFjendtligeNaboLande;
   }
-  
-  ArrayList<Territorium> findAlleFjendtligeNaboLande(Spiller spiller){
-    ArrayList<Territorium> alleFjendtligeNaboLande = new ArrayList<Territorium>();
-    
-    ArrayList<Territorium> ejedeTerritorier = findTerritorierEjetAfSpiller(spiller);
-    for (int e = 0; e < ejedeTerritorier.size(); e++) {
-      ArrayList<Territorium> fjendtligeNaboLande = findFjendtligeNaboLande(ejedeTerritorier.get(e), spiller);
-      for (int n = 0; n < fjendtligeNaboLande.size(); n++) {
-        alleFjendtligeNaboLande.add(fjendtligeNaboLande.get(n));
-      }
-    }
-    
-    return alleFjendtligeNaboLande;
-  }
+ 
   
   ArrayList<Territorium> findAlleForbundneTerritorier(Territorium start, Spiller spiller){
     ArrayList<Territorium> alleForbundneTerritorier = new ArrayList<Territorium>();
