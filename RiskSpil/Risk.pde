@@ -378,7 +378,8 @@ class Risk {
     }
 
     if (spilTilstand == SpilTilstand.FLYT) { // Den aktive spiller har mulighed for at flytte arméer
-      
+      tilstandFlyt();
+      return;
     }
   }
   
