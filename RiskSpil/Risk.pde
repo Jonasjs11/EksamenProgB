@@ -27,6 +27,7 @@ class Risk {
   Territorium forsvarendeTerritorium;
   int antalAngribendeArméer = -1;
   int antalForsvarendeArméer = -1;
+  boolean aktivSpillerHarErobretTerritorie = false;
   
   // VARIABLER TIL FLYTTELSE
   Territorium territoriumTilFraflytning;
@@ -402,6 +403,7 @@ class Risk {
         
         antalArméerTilModtagelse = 0;
         territoriumTilModtagelse = null;
+        aktivSpillerHarErobretTerritorie = false;
         spilTilstand = SpilTilstand.ANGRIB;
         return;
       }
@@ -477,6 +479,7 @@ class Risk {
             antalForsvarendeArméer = -1;
             angribendeTerritorium = null;
             forsvarendeTerritorium = null;
+<<<<<<< Updated upstream
             
             boolean kanAngribeIgen = false;
             ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
@@ -489,6 +492,13 @@ class Risk {
               spilTilstand = SpilTilstand.FLYT;
             }
             
+=======
+            if (aktivSpillerHarErobretTerritorie){
+              
+            }
+            aktivSpillerHarErobretTerritorie = false;
+            spilTilstand = SpilTilstand.FLYT;
+>>>>>>> Stashed changes
             return;
           }
         }
@@ -589,4 +599,18 @@ class Risk {
       forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
     }
   }
+<<<<<<< Updated upstream
+=======
+
+  // Overtagelse
+  if (forsvarendeTerritorium.boendeArméer() <= 0) {
+    forsvarendeTerritorium.skiftEjer(aktivSpiller);
+
+    angribendeTerritorium.fjernArméer(antalAngribendeArméer);
+    forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
+    
+    aktivSpillerHarErobretTerritorie = true;
+  }
+}
+>>>>>>> Stashed changes
 }
