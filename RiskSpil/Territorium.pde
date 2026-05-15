@@ -58,7 +58,7 @@ class Territorium {
     return sum.div(amount);
   }
   
-  void markerTerritoriumMedCirkel(int radius, color farve){
+  void markerMedCirkel(int radius, color farve){
     PVector m = midt();
     noStroke();
     fill(red(farve), green(farve), blue(farve), 150);

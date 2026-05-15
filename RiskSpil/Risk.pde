@@ -1,6 +1,6 @@
 class Risk {
 
-  Raflebaeger rb;
+  
 
   // VARIABLER TIL DATA
   Spiller[] spillere;
@@ -8,7 +8,7 @@ class Risk {
   boolean[][] naboMatrice;
   int[][] kontinenter;
   int[] kontinentBonuser;
-  Terning[] terninger;
+  Raflebaeger rb;
   final color[] spillerFarver = new color[]{#FF0000, #00FF00, #0000FF, #FFFF00, #00FFFF};
   final boolean F = true;
   final boolean N = false;
@@ -299,7 +299,7 @@ class Risk {
 
   void vis() {
     background(#B9F4FF);
-
+    
     for (PShape kystlinje : kystlinjer) {
       shape(kystlinje, 0, 0);
     }
@@ -342,7 +342,7 @@ class Risk {
 
   void markerTerritorierMedCirkel(ArrayList<Territorium> territorierTiLMarkering){
     for (int i = 0; i < territorierTiLMarkering.size(); i++) {
-      territorierTiLMarkering.get(i).markerTerritoriumMedCirkel(20, #FFE59D);
+      territorierTiLMarkering.get(i).markerMedCirkel(20, #FFE59D);
     }
   }
 
@@ -434,7 +434,7 @@ class Risk {
         }
       } else if (forsvarendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
         statusText = "Vælg territorium til angreb";
-        angribendeTerritorium.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
+        angribendeTerritorium.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
 
         ArrayList<Territorium> alleFjendtligeNaboLande = findFjendtligeNaboLande(angribendeTerritorium, aktivSpiller);
         markerTerritorierMedCirkel(alleFjendtligeNaboLande);
@@ -447,8 +447,8 @@ class Risk {
           }
         }
       } else { // Territorierne er valgt
-        angribendeTerritorium.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
-        forsvarendeTerritorium.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt forsvarende territorium
+        angribendeTerritorium.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt angribende territorium
+        forsvarendeTerritorium.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt forsvarende territorium
       
         if (antalAngribendeArméer == -1) { // Den aktive spiller skal vælge hvilket territorium der skal kæmpes mod
           statusText = "Vælg antal angribende arméer";
@@ -512,7 +512,7 @@ class Risk {
       } else if (territoriumTilTilflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer til
         statusText = "Vælg tilflyttende territorium";
         
-        territoriumTilFraflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
+        territoriumTilFraflytning.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
         
         ArrayList<Territorium> alleForbundneTerritorier = findAlleForbundneTerritorier(territoriumTilFraflytning, aktivSpiller);
         markerTerritorierMedCirkel(alleForbundneTerritorier);
@@ -527,8 +527,8 @@ class Risk {
       } else { // Den aktive spiller har valgt begge territorier, og skal nu vælge antallet der skal flyttes
         statusText = "Vælg antal arméer der skal flyttes";
         
-        territoriumTilFraflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
-        territoriumTilTilflytning.markerTerritoriumMedCirkel(20, #97F5D9); // Marker det tidligere valgt tilflytning territorium
+        territoriumTilFraflytning.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt fraflytning territorium
+        territoriumTilTilflytning.markerMedCirkel(20, #97F5D9); // Marker det tidligere valgt tilflytning territorium
         
         if (numberReleased >= 1 && territoriumTilFraflytning.boendeArméer() - numberReleased >= 1) { // Der skal være mindst én armé tilbage
           territoriumTilFraflytning.fjernArméer(numberReleased);

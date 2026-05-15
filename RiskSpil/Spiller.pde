@@ -23,20 +23,4 @@ class Spiller {
     textSize(20);
     text(navn, nedersteVenstreHjørne.x+bredde/2, nedersteVenstreHjørne.y-højde);
   }
-
-  void modtagArmé() {
-    
-  }
-
-  void flytArmé() {
-    
-  }
-
-  void angrib() {
-    
-  }
-
-  void sætArme() {
-    
-  }
 }
