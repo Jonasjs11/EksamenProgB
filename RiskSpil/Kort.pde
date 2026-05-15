@@ -1,7 +1,5 @@
 class Kort  {
   
-  int value = 1;
-  int maxValue = 5;
   float x, y;
   color farve;
   int AntalSider;
@@ -18,6 +16,7 @@ class Kort  {
     fill(farve);
     rect(x,y,50,100);
     
+    text("", x+20, y+20);
     
   }
 }
