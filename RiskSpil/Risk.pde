@@ -369,7 +369,21 @@ class Risk {
   */
   void tick() {
     if (spilTilstand == SpilTilstand.TILFØJ) { // Den aktive spiller skal tiljøje arméer til territorierne
-      if (territoriumTilModtagelse == null) {
+      tilstandTilføj();
+      return;
+    }
+    if (spilTilstand == SpilTilstand.ANGRIB) { // Den aktive spiller har mulighed for at angribe
+      tilstandAngrib();
+      return;
+    }
+
+    if (spilTilstand == SpilTilstand.FLYT) { // Den aktive spiller har mulighed for at flytte arméer
+      
+    }
+  }
+  
+  void tilstandTilføj(){
+    if (territoriumTilModtagelse == null) {
         statusText = "Vælg modtagende territorium";
         
         ArrayList<Territorium> alleTerritorierEjetAfSpiller = findTerritorierEjetAfSpiller(aktivSpiller);
@@ -390,11 +404,10 @@ class Risk {
         spilTilstand = SpilTilstand.ANGRIB;
         return;
       }
-    }
-
-
-    if (spilTilstand == SpilTilstand.ANGRIB) { // Den aktive spiller har mulighed for at angribe
-      if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
+  }
+  
+  void tilstandAngrib(){
+    if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg angribende territorium";
         
         fill(127);
@@ -479,10 +492,10 @@ class Risk {
           }
         }
       }
-    }
-
-    if (spilTilstand == SpilTilstand.FLYT) { // Den aktive spiller har mulighed for at flytte arméer
-      if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
+  }
+  
+  void tilstandFlyt(){
+    if (territoriumTilFraflytning == null) { // Den aktive spiller skal vælge territorium til at flytte arméer fra
         statusText = "Vælg fraflyttende territorium";
         
         ArrayList<Territorium> alleTerritorierMedForbundneTerritorier = findAlleTerritorierMedForbundneTerritorier(aktivSpiller);
@@ -525,7 +538,6 @@ class Risk {
           skiftTurTilNæsteSpiller();
         }
       }
-    }
   }
 
   void kastTerninger() {
