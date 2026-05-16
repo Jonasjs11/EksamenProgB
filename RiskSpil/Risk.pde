@@ -312,8 +312,9 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-
+    if(spilTilstand == SpilTilstand.ANGRIB){
     rb.show();
+    }
     
     for (Spiller spiller : spillere) {
       spiller.vis();
