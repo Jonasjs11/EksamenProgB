@@ -506,6 +506,17 @@ rb.addDice(new Terning(width/2 + 70, height - 70, 6, color(0, 0, 255)));
           
           if (numberReleased >= 1 && numberReleased <= 2) {
             antalForsvarendeArméer = numberReleased;
+            
+            // Angriberterninger
+             for (int i = 0; i < 3; i++) {
+             rb.terninger.get(i).aktiv = (i < antalAngribendeArméer);
+  }
+
+              // Forsvarerterninger
+              for (int i = 3; i < 5; i++) {
+              rb.terninger.get(i).aktiv = (i - 3 < antalForsvarendeArméer);
+  }
+
             return;
           }
         }
@@ -599,16 +610,6 @@ rb.addDice(new Terning(width/2 + 70, height - 70, 6, color(0, 0, 255)));
   }
 
 void kastTerninger() {
-
-  // Angriberterninger
-  for (int i = 0; i < 3; i++) {
-    rb.terninger.get(i).aktiv = (i < antalAngribendeArméer);
-  }
-
-  // Forsvarerterninger
-  for (int i = 3; i < 5; i++) {
-    rb.terninger.get(i).aktiv = (i - 3 < antalForsvarendeArméer);
-  }
 
   rb.ryst();
 }
