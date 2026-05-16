@@ -41,14 +41,30 @@ class Risk {
 
 
   Risk(int antalSpillere) {
-    // SETUP AF SPILLERE
-    if (antalSpillere < 2 || antalSpillere > 5) {
-      println("Mærkeligt antal spillere: " + antalSpillere);
+  // SETUP AF SPILLERE 
+    spillere = new Spiller[4]; 
+    
+    int terningKasseBredde = 300;
+    int pladsPåSiderne = (width - terningKasseBredde) / 2; // 250 pixels på hver side
+    int spillerBredde = pladsPåSiderne / 2; // 125 pixels pr. spiller
+    
+    for (int i = 0; i < 4; i++) {
+      int x;
+      
+      if (i < 2) {
+        // Spiller 1 og 2 (index 0 og 1) placeres til venstre for midten
+        x = i * spillerBredde; 
+      } else {
+        // Spiller 3 og 4 (index 2 og 3) placeres til højre for midten
+        int højreIndex = i - 2; // Giver 0 for spiller 3 og 1 for spiller 4
+        x = (width / 2 + terningKasseBredde / 2) + (højreIndex * spillerBredde);
+      }
+      
+      // Placerer dem helt nede i bunden med en højde på 100
+      spillere[i] = new Spiller(spillerFarver[i], "Spiller " + (i+1), new PVector(x, height), spillerBredde, 100);
     }
-    spillere = new Spiller[antalSpillere];
-    for (int i = 0; i < spillere.length; i++) {
-      spillere[i] = new Spiller(spillerFarver[i], str(i), new PVector(25+floor(i/2)*625+(i%2)*175, height), 150, 100);
-    }
+    
+    
 
     // SETUP AF ANDET
     statusText = "Klar til start.";
