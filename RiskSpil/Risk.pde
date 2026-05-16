@@ -547,9 +547,20 @@ class Risk {
       }
   }
 
-  void kastTerninger() {
-    rb.ryst();
+void kastTerninger() {
+
+  // Angriberterninger
+  for (int i = 0; i < 3; i++) {
+    rb.terninger.get(i).aktiv = (i < antalAngribendeArméer);
   }
+
+  // Forsvarerterninger
+  for (int i = 3; i < 5; i++) {
+    rb.terninger.get(i).aktiv = (i - 3 < antalForsvarendeArméer);
+  }
+
+  rb.ryst();
+}
   
   boolean territorierErForbundede(Territorium start, Territorium slut){
     return true;

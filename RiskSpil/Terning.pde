@@ -1,5 +1,6 @@
 class Terning {
 
+  boolean aktiv =true;
   int value =1;
   int maxValue =6;
   float x, y;
@@ -21,6 +22,9 @@ class Terning {
   //funktioner
 
   void show() {
+    if(!aktiv){
+      return;
+    }
     //tegn terning
     fill(farveT);
     rect(x, y, 40, 40);
