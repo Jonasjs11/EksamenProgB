@@ -28,6 +28,8 @@ class Risk {
   int antalAngribendeArméer = -1;
   int antalForsvarendeArméer = -1;
   boolean aktivSpillerHarErobretTerritorie = false;
+  boolean aktivSpillerKanModtageTerritoriekortNu = false;
+  boolean aktivSpillerHarModtagetTerritoriekort = false;
   
   // VARIABLER TIL FLYTTELSE
   Territorium territoriumTilFraflytning;
@@ -411,6 +413,24 @@ class Risk {
   }
   
   void tilstandAngrib(){
+    if (aktivSpillerHarErobretTerritorie){ // Spiller har erobret et territtorie, og
+      statusText = "Vælg antal arméer der skal flyttes";
+      
+      if (numberReleased >= 1 && numberReleased <= angribendeTerritorium.boendeArméer-1) {
+        angribendeTerritorium.fjernArméer(numberReleased);
+        forsvarendeTerritorium.tilføjArméer(numberReleased);
+        
+        spilTilstand = SpilTilstand.FLYT;
+        aktivSpillerHarModtagetTerritoriekort = false;
+              
+        antalAngribendeArméer = -1;
+        antalForsvarendeArméer = -1;
+        angribendeTerritorium = null;
+        forsvarendeTerritorium = null;
+      }
+      return;
+    }
+    
     if (angribendeTerritorium == null) { // Den aktive spiller skal vælge hvilket territorium der skal angribe
         statusText = "Vælg angribende territorium";
         
@@ -476,10 +496,11 @@ class Risk {
             
             sammenlignTerningerOgLavKrig();
             
-            antalAngribendeArméer = -1;
-            antalForsvarendeArméer = -1;
-            angribendeTerritorium = null;
-            forsvarendeTerritorium = null;
+            if (aktivSpillerKanModtageTerritoriekortNu == true && aktivSpillerHarModtagetTerritoriekort == false){ 
+              // Giv spiller et territorie kort her
+              aktivSpillerKanModtageTerritoriekortNu = false;
+              aktivSpillerHarModtagetTerritoriekort = true;
+            }
             
             boolean kanAngribeIgen = false;
             ArrayList<Territorium> alleTerritorierMedFjendtligeNaboLande = findAlleTerritorierMedFjendtligeNaboLande(aktivSpiller);
@@ -488,15 +509,23 @@ class Risk {
                 kanAngribeIgen = true;
               }
             }
-            if (kanAngribeIgen == false) {
-              spilTilstand = SpilTilstand.FLYT;
+            
+            if (kanAngribeIgen == true && aktivSpillerHarErobretTerritorie == false){
+              antalAngribendeArméer = -1;
+              antalForsvarendeArméer = -1;
+              angribendeTerritorium = null;
+              forsvarendeTerritorium = null;
             }
             
-            if (aktivSpillerHarErobretTerritorie){ 
-              // Giv spiller et territorie kort her
-              aktivSpillerHarErobretTerritorie = false;
+            if (kanAngribeIgen == false && aktivSpillerHarErobretTerritorie == false) {
+              spilTilstand = SpilTilstand.FLYT;
+              aktivSpillerHarModtagetTerritoriekort = false;
+              
+              antalAngribendeArméer = -1;
+              antalForsvarendeArméer = -1;
+              angribendeTerritorium = null;
+              forsvarendeTerritorium = null;
             }
-            return;
           }
         }
       }
@@ -602,11 +631,10 @@ void kastTerninger() {
     // Overtagelse
     if (forsvarendeTerritorium.boendeArméer() <= 0) {
       forsvarendeTerritorium.skiftEjer(aktivSpiller);
-  
-      angribendeTerritorium.fjernArméer(antalAngribendeArméer);
-      forsvarendeTerritorium.tilføjArméer(antalAngribendeArméer);
+      forsvarendeTerritorium.boendeArméer = 0;
       
       aktivSpillerHarErobretTerritorie = true;
+      aktivSpillerKanModtageTerritoriekortNu = true;
     }
   }
 }
