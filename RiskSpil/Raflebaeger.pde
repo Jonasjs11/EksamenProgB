@@ -32,6 +32,7 @@ class Raflebaeger {
   void show() {
     for (Terning t : terninger) {
       t.show();
+      
     }
   }
 }

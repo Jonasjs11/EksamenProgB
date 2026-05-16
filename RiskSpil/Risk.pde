@@ -134,11 +134,11 @@ class Risk {
     // SETUP AF TERNINGER
     rb = new Raflebaeger();
 
-    rb.addDice(new Terning(width/2,     height/7 * 5,      6, color(255, 0, 0)));
-    rb.addDice(new Terning(width/2 -55, height/7 * 5 - 40, 6, color(255, 0, 0)));
-    rb.addDice(new Terning(width/2 -55, height/7 * 5 + 40, 6, color(255, 0, 0)));
-    rb.addDice(new Terning(width/2 +55, height/7 * 5 - 40, 6, color(0, 0, 255)));
-    rb.addDice(new Terning(width/2 +55, height/7 * 5 + 40, 6, color(0, 0, 255)));
+   rb.addDice(new Terning(width/2 - 110, height - 70, 6, color(255, 0, 0)));
+rb.addDice(new Terning(width/2 - 65, height - 70, 6, color(255, 0, 0)));
+rb.addDice(new Terning(width/2 - 20, height - 70, 6, color(255, 0, 0)));
+rb.addDice(new Terning(width/2 + 25, height - 70, 6, color(0, 0, 255)));
+rb.addDice(new Terning(width/2 + 70, height - 70, 6, color(0, 0, 255)));
   }
   
   /*
@@ -314,9 +314,8 @@ class Risk {
     for (Territorium territorium : territorier) {
       territorium.vis();
     }
-    if(spilTilstand == SpilTilstand.ANGRIB){
-    rb.show();
-    }
+
+
     
     for (Spiller spiller : spillere) {
       spiller.vis();
@@ -342,6 +341,9 @@ class Risk {
     textSize(14);
     textAlign(CENTER, CENTER);
     text(statusText, width/2, height-terningKasseHøjde-statusHøjde/2);
+     if(spilTilstand == SpilTilstand.ANGRIB){
+    rb.show();
+     }
   }
 
   void markerTerritorierMedCirkel(ArrayList<Territorium> territorierTiLMarkering){
