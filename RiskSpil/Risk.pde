@@ -341,9 +341,12 @@ rb.addDice(new Terning(width/2 + 70, height - 70, 6, color(0, 0, 255)));
     textSize(14);
     textAlign(CENTER, CENTER);
     text(statusText, width/2, height-terningKasseHøjde-statusHøjde/2);
-     if(spilTilstand == SpilTilstand.ANGRIB){
+    if (spilTilstand == SpilTilstand.ANGRIB &&
+      antalAngribendeArméer != -1 &&
+      antalForsvarendeArméer != -1) {
     rb.show();
-     }
+}
+     
   }
 
   void markerTerritorierMedCirkel(ArrayList<Territorium> territorierTiLMarkering){
